@@ -19,30 +19,24 @@
 		class="sticky top-0 z-50 px-4 py-4 md:px-8 bg-background/95 backdrop-blur-md border-b border-primary"
 	>
 		<div class="flex items-center justify-between">
-			<!-- 로고 -->
-			<a href="/" class="text-primary no-underline tracking-tight">
-				<img src="/logo.png" alt="logo" class="w-10 h-10" />
-			</a>
-
 			<!-- 데스크톱 네비게이션 -->
 			<nav class="hidden md:flex items-center justify-start gap-8">
 				<a
+					href="/"
+					class="text-primary no-underline transition-colors duration-200 tracking-normal hover:text-secondary"
+					>Home</a
+				>
+				<a
 					href="{base}/dev"
 					class="text-primary no-underline transition-colors duration-200 tracking-normal hover:text-secondary"
-					>개발 로그</a
+					>Coding Journal</a
 				>
 				<a
 					href="{base}/blog"
 					class="text-primary no-underline transition-colors duration-200 tracking-normal hover:text-secondary"
-					>블로그</a
+					>Life Journal</a
 				>
 			</nav>
-
-			<!-- 데스크톱 우측 메뉴 -->
-			<div class="items-center justify-end gap-4 hidden md:flex">
-				<AdminLink />
-				<ThemeToggle />
-			</div>
 
 			<!-- 모바일 햄버거 메뉴 버튼 -->
 			<button
@@ -76,10 +70,10 @@
 
 		<!-- drawer 메뉴 -->
 		<div
-			class="fixed top-0 right-0 h-full max-w-72 w-full bg-background border-l border-primary z-50 md:hidden transform transition-transform duration-300 ease-in-out"
+			class="fixed top-0 right-0 h-full max-w-72 w-full bg-background z-50 md:hidden transform transition-transform duration-300 ease-in-out"
 		>
 			<!-- drawer 헤더 -->
-			<div class="flex items-center justify-between p-4 border-b border-primary">
+			<div class="flex items-center justify-between p-4">
 				<span class="text-primary font-semibold">메뉴</span>
 				<button
 					class="p-2 text-primary hover:text-secondary transition-colors duration-200"

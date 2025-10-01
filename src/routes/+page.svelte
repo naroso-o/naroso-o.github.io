@@ -1,9 +1,7 @@
 <script lang="ts">
 	import { base } from '$app/paths';
-	import HeroBanner from '$lib/components/home/HeroBanner.svelte';
 	import PostCard from '$lib/components/dev-log/PostCard.svelte';
 	import type { Post } from '$lib/types';
-	import HeroSection from '../lib/components/home/HeroSection.svelte';
 	import NoPostMessage from '../lib/components/common/NoPostMessage.svelte';
 
 	// 서버에서 받은 데이터
@@ -13,6 +11,19 @@
 	};
 
 	$: ({ recentPosts, featuredPosts } = data);
+
+	const handleClick = () => {
+		const button = document.querySelector('.particleButton');
+
+		Array.from({ length: 5 }).forEach(() => {
+			const particle = document.createElement('span');
+			particle.classList.add('particle');
+			particle.style.top = Math.random() * 100 + '%';
+			particle.style.left = Math.random() * 100 + '%';
+
+			button.appendChild(particle);
+		});
+	};
 </script>
 
 <svelte:head>
@@ -20,43 +31,38 @@
 	<meta name="description" content="developer naroso-o's blog" />
 </svelte:head>
 
-<HeroBanner />
-
-<!-- 추천 포스트 섹션 -->
-<!-- {#if featuredPosts.length > 0}
-	<HeroSection title="📌 Pinned" moreLink={`${base}/dev?pinned=true`}>
-		<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-			{#each featuredPosts as post}
-				<PostCard {post} variant="gradient" href={`${base}/dev/${post.slug}`} />
-			{/each}
-		</div>
-	</HeroSection>
-{/if} -->
-
-<!-- 최신 포스트 섹션 -->
-{#if recentPosts.length > 0}
-	<HeroSection title="📝 최근 글" moreLink={`${base}/dev`}>
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-			{#each recentPosts as post}
-				<div class="place-self-center">
-					<PostCard {post} href={`${base}/dev/${post.slug}`} />
-				</div>
-			{/each}
-		</div>
-		{#if recentPosts.length === 0}
-			<NoPostMessage />
-		{/if}
-	</HeroSection>
-{/if}
+<div class="max-w-6xl mx-auto px-4 py-8">
+	<div class="flex justify-center">
+		<button class="particleButton" on:click={handleClick}>
+			<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+				<path
+					d="M3.68546 5.43796C8.61936 1.29159 11.8685 7.4309 12.0406 7.4309C12.2126 7.43091 15.4617 1.29159 20.3956 5.43796C26.8941 10.8991 13.5 21.8215 12.0406 21.8215C10.5811 21.8215 -2.81297 10.8991 3.68546 5.43796Z"
+					stroke="white"
+					stroke-width="2"
+					stroke-linecap="round"
+				/>
+			</svg>
+			<span class="visually-hidden">Welcome Effect Button</span>
+		</button>
+	</div>
+</div>
 
 <style>
-	/* 기존 float 애니메이션 */
-	@keyframes float {
-		0% {
-			transform: translateY(0px);
+	@keyframes fadeOut {
+		from {
+			opacity: 1;
 		}
-		100% {
-			transform: translateY(-100px);
+		to {
+			opacity: 0;
 		}
+	}
+
+	.particleButton .particle {
+		position: absolute;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: white;
+		animation: fadeOut 1000ms forwards;
 	}
 </style>

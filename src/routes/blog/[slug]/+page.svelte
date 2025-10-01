@@ -28,7 +28,7 @@
 </script>
 
 <svelte:head>
-	<title>{piece.title} - naroso-o 일상 블로그</title>
+	<title>{piece.title} - naroso-o Blog</title>
 	<meta name="description" content={piece.excerpt || ''} />
 	<meta property="og:title" content={piece.title} />
 	<meta property="og:description" content={piece.excerpt || ''} />

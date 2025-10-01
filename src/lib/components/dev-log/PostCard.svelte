@@ -15,7 +15,7 @@
 </script>
 
 <article
-	class={`w-84 rounded-xl bg-card-bg border border-primary shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg overflow-hidden flex flex-col ${
+	class={`w-84 rounded-xl bg-white border border-primary shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg overflow-hidden flex flex-col ${
 		isGradient ? 'bg-background-gradient' : ''
 	}`}
 >
@@ -46,7 +46,7 @@
 			<h3 class="font-semibold leading-tight text-xl mb-2">
 				<a
 					href={href || `${base}/dev/${post.slug}`}
-					class="hover:text-brand-primary text-primary transition-colors duration-200 line-clamp-2"
+					class="text-inverse transition-colors duration-200 line-clamp-2"
 				>
 					{post.title}
 				</a>
@@ -54,7 +54,7 @@
 		</header>
 
 		<!-- excerpt -->
-		<p class="leading-relaxed mb-6 text-secondary text-sm line-clamp-4">
+		<p class="leading-relaxed mb-6 text-sm line-clamp-4 text-inverse">
 			{post.excerpt}
 		</p>
 
@@ -62,19 +62,21 @@
 		<footer class="space-y-4 mt-auto">
 			<!-- date -->
 			<div class="flex items-center gap-2 text-sm">
-				<time class="date text-tertiary">{formatDate(post.created_at)}</time>
+				<time class="date text-inverse">{formatDate(post.created_at)}</time>
 			</div>
 
 			<!-- tags -->
 			{#if displayTags && displayTags.length > 0}
 				<div class="flex gap-2 flex-wrap">
 					{#each displayTags as tag}
-						<a
+						<!-- <a -->
+						<span
 							href="{base}/dev/tag/{tag}"
-							class="px-2 py-1 rounded-full text-xs transition-colors duration-200 bg-surface text-tertiary hover:bg-primary/10"
+							class="px-2 py-1 rounded-full text-xs transition-colors duration-200 bg-gray-100 text-gray-600 hover:bg-primary/10"
 						>
 							#{tag}
-						</a>
+						</span>
+						<!-- </a> -->
 					{/each}
 				</div>
 			{/if}
