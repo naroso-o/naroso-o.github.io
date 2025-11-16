@@ -18,9 +18,9 @@
 	/>
 
 	{#if data.pieces && data.pieces.length > 0}
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+		<div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
 			{#each data.pieces as piece}
-				<div class="place-self-center">
+				<div class="break-inside-avoid mb-6">
 					<PieceCard {piece} />
 				</div>
 			{/each}
