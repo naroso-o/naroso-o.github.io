@@ -14,43 +14,42 @@
 		isDrawerOpen = false;
 	}
 
-	// Loaded from .env.local, guide covers this
-	// step in a moment.
-	const isMswEnabled = dev && import.meta.env.VITE_MSW_ENABLED === 'true';
-	// Flag to defer rendering of components
-	// until certain criteria are met on dev,
-	// e.g. MSW init.
-	let isReady = !isMswEnabled;
+<div class="flex flex-col min-h-screen">
+	<header
+		class="sticky top-0 z-50 px-4 py-4 md:px-8 bg-background/95 backdrop-blur-md border-b border-primary"
+	>
+		<div class="flex items-center justify-between">
+			<!-- 데스크톱 네비게이션 -->
+			<nav class="hidden md:flex items-center justify-start gap-8">
+				<a
+					href="/"
+					class="text-primary no-underline transition-colors duration-200 tracking-normal hover:text-secondary"
+					>Coding Journal</a
+				>
+				<a
+					href="{base}/blog"
+					class="text-primary no-underline transition-colors duration-200 tracking-normal hover:text-secondary"
+					>Life Journal</a
+				>
+			</nav>
 
-	if (isMswEnabled) {
-		import('../msw').then((res) => res.inject()).then(() => (isReady = true));
-	}
-</script>
-
-{#if isReady}
-	<div class="flex flex-col min-h-screen">
-		<header
-			class="sticky top-0 z-50 px-4 py-4 md:px-8 bg-background/95 backdrop-blur-md border-b border-primary"
-		>
-			<div class="flex items-center justify-between">
-				<!-- 로고 -->
-				<a href="/" class="text-primary no-underline tracking-tight">
-					<img src="/logo.png" alt="logo" class="w-10 h-10" />
-				</a>
-
-				<!-- 데스크톱 네비게이션 -->
-				<nav class="hidden md:flex items-center justify-start gap-8">
-					<a
-						href="{base}/dev"
-						class="text-primary no-underline transition-colors duration-200 tracking-normal hover:text-secondary"
-						>개발 로그</a
-					>
-					<a
-						href="{base}/blog"
-						class="text-primary no-underline transition-colors duration-200 tracking-normal hover:text-secondary"
-						>블로그</a
-					>
-				</nav>
+			<!-- 모바일 햄버거 메뉴 버튼 -->
+			<button
+				class="md:hidden p-2 text-primary hover:text-secondary transition-colors duration-200"
+				on:click={toggleDrawer}
+				aria-label="메뉴 열기"
+			>
+				<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M4 6h16M4 12h16M4 18h16"
+					></path>
+				</svg>
+			</button>
+		</div>
+	</header>
 
 				<!-- 데스크톱 우측 메뉴 -->
 				<div class="items-center justify-end gap-4 hidden md:flex">
@@ -58,7 +57,13 @@
 					<ThemeToggle />
 				</div>
 
-				<!-- 모바일 햄버거 메뉴 버튼 -->
+		<!-- drawer 메뉴 -->
+		<div
+			class="fixed top-0 right-0 h-full max-w-72 w-full bg-background z-50 md:hidden transform transition-transform duration-300 ease-in-out"
+		>
+			<!-- drawer 헤더 -->
+			<div class="flex items-center justify-between p-4">
+				<span class="text-primary font-semibold">메뉴</span>
 				<button
 					class="md:hidden p-2 text-primary hover:text-secondary transition-colors duration-200"
 					on:click={toggleDrawer}

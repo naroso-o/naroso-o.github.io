@@ -7,12 +7,15 @@
 </script>
 
 <svelte:head>
-	<title>naroso-o 일상 블로그</title>
+	<title>naroso-o Blog</title>
 	<meta name="description" content="developer naroso-o's daily life blog" />
 </svelte:head>
 
-<div class="max-w-7xl mx-auto px-4 py-8">
-	<PageHeader title="블로그" description="일상을 기록합니다." />
+<div class="max-w-6xl mx-auto px-4 py-8">
+	<PageHeader
+		title="Life Journal"
+		description="Personal notes and moments from everyday life beyond code."
+	/>
 
 	{#if data.pieces && data.pieces.length > 0}
 		<div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">

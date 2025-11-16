@@ -4,6 +4,6 @@
 </script>
 
 <header class="text-center mt-12 mb-16">
-	<h2 class="text-4xl font-bold text-gray-900 mb-2">{title}</h2>
-	<p class="text-lg text-gray-600">{description}</p>
+	<h2 class="text-4xl font-bold pb-8">{title}</h2>
+	<p class="text-lg text-secondary">{description}</p>
 </header>
