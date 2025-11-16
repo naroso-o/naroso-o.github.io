@@ -24,11 +24,6 @@
 				<a
 					href="/"
 					class="text-primary no-underline transition-colors duration-200 tracking-normal hover:text-secondary"
-					>Home</a
-				>
-				<a
-					href="{base}/dev"
-					class="text-primary no-underline transition-colors duration-200 tracking-normal hover:text-secondary"
 					>Coding Journal</a
 				>
 				<a
