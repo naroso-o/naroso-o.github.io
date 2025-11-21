@@ -1,108 +1,194 @@
 <script lang="ts">
-	import { base } from '$app/paths';
-	import { formatDate } from '../../utils/date';
-	import type { Post } from '../../types';
+	import { formatDate } from '$lib/utils/date';
+	import type { Post } from '$lib/types';
 
-	export let post: Post;
-	export let variant: 'gradient' | 'default' = 'default';
-	export let maxTags: number | null = null;
-	export let href: string | null = null;
+	let {
+		post,
+		maxTags = null,
+		href = null,
+		isSelected = false
+	}: { post: Post; maxTags?: number | null; href?: string | null; isSelected?: boolean } = $props();
 
-	$: console.log(post.thumbnail);
-
-	$: displayTags = maxTags ? post.tags?.slice(0, maxTags) : post.tags;
-	$: isGradient = variant === 'gradient';
+	let displayTags = $derived(maxTags ? post.tags?.slice(0, maxTags) : post.tags);
 </script>
 
-<article
-	class={`w-84 rounded-xl bg-white border border-primary shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg overflow-hidden flex flex-col ${
-		isGradient ? 'bg-background-gradient' : ''
-	}`}
+<button
+	class="post-card"
+	class:selected={isSelected}
+	onclick={() => {
+		window.location.href = href || `/dev/${post.slug}`;
+	}}
+	type="button"
+	tabindex="-1"
 >
-	<!-- 썸네일 이미지 -->
-	{#if post.thumbnail}
-		<div class="h-48 w-full overflow-hidden">
-			<img
-				src={post.thumbnail}
-				alt={post.title}
-				class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-			/>
+	<div class="triangle-icon" class:active={isSelected}></div>
+	<div class="content">
+		<div class="title" class:active={isSelected}>
+			{post.title}
 		</div>
-	{:else}
-		<!-- 썸네일이 없는 경우 기본 배경 -->
-		<div
-			class="h-48 w-full bg-gradient-to-br from-primary/20 to-brand-primary/20 flex items-center justify-center"
-		>
-			<div class="text-primary/50 text-4xl font-bold">
-				{post.title.charAt(0).toUpperCase()}
-			</div>
-		</div>
-	{/if}
 
-	<!-- 콘텐츠 영역 -->
-	<div class="p-6 flex-1">
-		<!-- header -->
-		<header class="mb-4">
-			<h3 class="font-semibold leading-tight text-xl mb-2">
-				<a
-					href={href || `${base}/dev/${post.slug}`}
-					class="text-inverse transition-colors duration-200 line-clamp-2"
-				>
-					{post.title}
-				</a>
-			</h3>
-		</header>
-
-		<!-- excerpt -->
-		<p class="leading-relaxed mb-6 text-sm line-clamp-4 text-inverse">
-			{post.excerpt}
-		</p>
-
-		<!-- footer -->
-		<footer class="space-y-4 mt-auto">
-			<!-- date -->
-			<div class="flex items-center gap-2 text-sm">
-				<time class="date text-inverse">{formatDate(post.created_at)}</time>
-			</div>
-
-			<!-- tags -->
+		<footer>
+			<time class="date text-inverse">{formatDate(post.created_at)}</time>
 			{#if displayTags && displayTags.length > 0}
-				<div class="flex gap-2 flex-wrap">
+				<div class="tags">
 					{#each displayTags as tag}
-						<!-- <a -->
-						<span
-							href="{base}/dev/tag/{tag}"
-							class="px-2 py-1 rounded-full text-xs transition-colors duration-200 bg-gray-100 text-gray-600 hover:bg-primary/10"
-						>
-							#{tag}
-						</span>
-						<!-- </a> -->
+						<span>#{tag}</span>
 					{/each}
 				</div>
 			{/if}
 		</footer>
 	</div>
-</article>
+</button>
 
 <style>
-	.line-clamp-2 {
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
+	.post-card {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		width: 100%;
+		padding: 1rem;
+
+		background: none;
+		border: 0.1rem solid #fff;
+
+		cursor: pointer;
+		transition: border-color 0.2s ease;
 	}
 
-	.line-clamp-3 {
-		display: -webkit-box;
-		-webkit-line-clamp: 3;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
+	.post-card:hover {
+		cursor: pointer;
 	}
 
-	.line-clamp-4 {
-		display: -webkit-box;
-		-webkit-line-clamp: 4;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
+	.post-card.selected {
+		border-color: #f7d022;
+	}
+
+	.triangle-icon {
+		width: 0;
+		height: 0;
+		border-left: 0.5rem solid transparent;
+		border-right: 0.5rem solid transparent;
+		border-bottom: 0.5rem solid #f7d022;
+		transform: rotate(90deg);
+		opacity: 0;
+		filter: blur(1px);
+		transition: opacity 0.2s ease;
+		flex-shrink: 0;
+	}
+
+	.triangle-icon.active {
+		opacity: 1;
+	}
+
+	.content {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+		gap: 2rem;
+	}
+
+	.title {
+		color: #fff;
+		font-size: 1rem;
+		white-space: nowrap;
+		transition: color 0.2s ease;
+		filter: blur(0.5px);
+	}
+
+	.title.active {
+		color: #f7d022;
+	}
+
+	.post-card footer {
+		display: flex;
+		flex-direction: column;
+		justify-content: start;
+		align-items: flex-end;
+		gap: 0.5rem;
+	}
+
+	.tags {
+		display: flex;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+
+	.tags span {
+		font-size: 0.8rem;
+		color: #999;
+		filter: blur(0.5px);
+	}
+
+	time {
+		font-size: 0.8rem;
+		color: #999;
+		filter: blur(0.5px);
+	}
+
+	@media (max-width: 768px) {
+		.post-card {
+			padding: 0.5rem;
+		}
+
+		.content {
+			gap: 0.5rem;
+		}
+
+		.title {
+			font-size: 0.8rem;
+		}
+
+		.post-card footer {
+			gap: 0.5rem;
+		}
+
+		.tags {
+			gap: 0.5rem;
+		}
+
+		time {
+			font-size: 0.6rem;
+		}
+
+		.tags span {
+			font-size: 0.6rem;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.post-card {
+			padding: 0.5rem;
+		}
+
+		.content {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.5rem;
+		}
+
+		.title {
+			font-size: 0.8rem;
+		}
+
+		.post-card footer {
+			width: 100%;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			gap: 0.5rem;
+		}
+
+		.tags {
+			gap: 0.5rem;
+		}
+
+		.tags span {
+			font-size: 0.6rem;
+		}
+
+		time {
+			font-size: 0.6rem;
+		}
 	}
 </style>

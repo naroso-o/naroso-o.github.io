@@ -4,8 +4,6 @@
 	import { hashPassword } from '../../utils/crypto.js';
 	import { formatDistanceToNow } from '../../utils/date.js';
 	import type { Comment, CommentInput } from '../../types.js';
-	import Button from '../entity/Button.svelte';
-	import Input from '../entity/Input.svelte';
 
 	export let postId: string;
 
@@ -76,9 +74,11 @@
 	onMount(async () => {
 		await checkGithubAuth();
 		await loadComments();
-		
+
 		// Auth state change 감지하여 자동으로 상태 업데이트
-		const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+		const {
+			data: { subscription }
+		} = supabase.auth.onAuthStateChange(async (event, session) => {
 			if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
 				if (session?.user) {
 					githubUser = session.user.user_metadata;
@@ -90,7 +90,7 @@
 				isSigningIn = false;
 			}
 		});
-		
+
 		// 컴포넌트 언마운트 시 구독 해제
 		return () => {
 			subscription.unsubscribe();
@@ -142,19 +142,18 @@
 	// GitHub 로그인
 	async function signInWithGithub() {
 		if (isSigningIn) return; // 이미 로그인 진행 중이면 중복 실행 방지
-		
+
 		isSigningIn = true;
 		try {
 			// 환경변수에서 사이트 URL 가져오기, 없으면 현재 URL 사용
 			let siteUrl = import.meta.env.VITE_SITE_URL;
-			
+
 			// 개발 환경에서는 현재 URL을 사용
 			if (import.meta.env.DEV || !siteUrl) {
 				siteUrl = window.location.origin;
 			}
-			
+
 			const redirectUrl = `${siteUrl}${window.location.pathname}`;
-			
 
 			const { error } = await supabase.auth.signInWithOAuth({
 				provider: 'github',
@@ -163,7 +162,7 @@
 				}
 			});
 			if (error) throw error;
-			
+
 			// OAuth 리디렉션이 성공적으로 시작되면 로딩 상태는 유지
 			// (페이지가 리디렉션되므로 isSigningIn = false는 필요 없음)
 		} catch (err: unknown) {
@@ -383,34 +382,34 @@
 			if (import.meta.env.DEV) {
 				console.log('Supabase 세션 정리 시작...');
 			}
-			
+
 			// Supabase 로그아웃
 			await supabase.auth.signOut();
-			
+
 			// 로컬 스토리지에서 Supabase 관련 데이터 삭제
-			const supabaseKeys = Object.keys(localStorage).filter(key => key.startsWith('sb-'));
-			supabaseKeys.forEach(key => {
+			const supabaseKeys = Object.keys(localStorage).filter((key) => key.startsWith('sb-'));
+			supabaseKeys.forEach((key) => {
 				if (import.meta.env.DEV) {
 					console.log('삭제:', key);
 				}
 				localStorage.removeItem(key);
 			});
-			
+
 			// 세션 스토리지도 정리
-			const sessionKeys = Object.keys(sessionStorage).filter(key => key.startsWith('sb-'));
-			sessionKeys.forEach(key => {
+			const sessionKeys = Object.keys(sessionStorage).filter((key) => key.startsWith('sb-'));
+			sessionKeys.forEach((key) => {
 				if (import.meta.env.DEV) {
 					console.log('세션 스토리지 삭제:', key);
 				}
 				sessionStorage.removeItem(key);
 			});
-			
+
 			// 상태 초기화
 			githubUser = null;
 			authMode = 'anonymous';
-			
+
 			showMessage('세션이 정리되었습니다. 페이지를 새로고침해주세요.', 'success');
-			
+
 			if (import.meta.env.DEV) {
 				console.log('세션 정리 완료');
 			}
@@ -428,16 +427,7 @@
 
 		<div class="flex gap-2">
 			{#if !showCommentForm}
-				<Button onclick={() => (showCommentForm = true)} variant="primary" size="sm">
-					댓글 작성
-				</Button>
-			{/if}
-			
-			<!-- 개발 환경에서만 보이는 디버그 버튼 -->
-			{#if import.meta.env.DEV}
-				<Button onclick={clearSupabaseSession} variant="secondary" size="sm">
-					🔧 세션 정리
-				</Button>
+				<button type="button" onclick={() => (showCommentForm = true)}> 댓글 작성 </button>
 			{/if}
 		</div>
 	</div>
@@ -491,7 +481,7 @@
 				<span>{errorState.message}</span>
 			</div>
 			<button
-				on:click={clearMessage}
+				onclick={clearMessage}
 				class="text-current hover:opacity-75 transition-opacity"
 				aria-label="메시지 닫기"
 			>
@@ -518,7 +508,7 @@
 						class="px-3 py-1 text-sm rounded-md transition-colors {authMode === 'anonymous'
 							? 'bg-brand-primary text-white'
 							: 'bg-surface-secondary text-secondary'}"
-						on:click={() => switchAuthMode('anonymous')}
+						onclick={() => switchAuthMode('anonymous')}
 					>
 						익명
 					</button>
@@ -526,7 +516,7 @@
 						class="px-3 py-1 text-sm rounded-md transition-colors {authMode === 'github'
 							? 'bg-brand-primary text-white'
 							: 'bg-surface-secondary text-secondary'}"
-						on:click={() => switchAuthMode('github')}
+						onclick={() => switchAuthMode('github')}
 					>
 						GitHub
 					</button>
@@ -540,33 +530,28 @@
 						<span class="text-primary font-medium">{githubUser.name || githubUser.login}</span>
 						<button
 							class="text-sm text-secondary hover:text-primary transition-colors ml-auto"
-							on:click={signOut}
+							onclick={signOut}
 						>
 							로그아웃
 						</button>
 					</div>
 				{:else}
 					<div class="text-center py-4">
-						<Button 
-							onclick={signInWithGithub} 
-							variant="primary" 
-							size="md"
-							disabled={isSigningIn}
-						>
+						<button type="button" onclick={signInWithGithub} disabled={isSigningIn}>
 							{#if isSigningIn}
 								GitHub 로그인 중...
 							{:else}
 								GitHub로 로그인
 							{/if}
-						</Button>
+						</button>
 					</div>
 				{/if}
 			{/if}
 
 			{#if authMode === 'anonymous'}
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-					<Input bind:value={commentForm.author_name} placeholder="작성자명" required />
-					<Input
+					<input type="text" bind:value={commentForm.author_name} placeholder="작성자명" required />
+					<input
 						bind:value={commentForm.password}
 						type="password"
 						placeholder="비밀번호 (4자 이상)"
@@ -587,13 +572,10 @@
 			</div>
 
 			<div class="flex gap-2 justify-end">
-				<Button onclick={() => (showCommentForm = false)} variant="secondary" size="sm">
-					취소
-				</Button>
-				<Button
+				<button type="button" onclick={() => (showCommentForm = false)}> 취소 </button>
+				<button
+					type="button"
 					onclick={submitComment}
-					variant="primary"
-					size="sm"
 					disabled={isSubmitting || (authMode === 'github' && !githubUser)}
 				>
 					{#if isSubmitting}
@@ -601,7 +583,7 @@
 					{:else}
 						댓글 등록
 					{/if}
-				</Button>
+				</button>
 			</div>
 		</div>
 	{/if}
@@ -703,19 +685,14 @@
 										rows="3"
 									></textarea>
 									<div class="flex gap-2">
-										<Button
-											onclick={saveEditComment}
-											variant="primary"
-											size="sm"
-											disabled={isSubmitting}
-										>
+										<button type="button" onclick={saveEditComment} disabled={isSubmitting}>
 											{#if isSubmitting}
 												저장 중...
 											{:else}
 												저장
 											{/if}
-										</Button>
-										<Button onclick={cancelEdit} variant="secondary" size="sm">취소</Button>
+										</button>
+										<button type="button" onclick={cancelEdit}>취소</button>
 									</div>
 								</div>
 							{:else}
@@ -729,26 +706,26 @@
 										{#if comment.author_type === 'github' && githubUser && (githubUser.id || githubUser.sub || githubUser.user_id)?.toString() === comment.github_user_id}
 											<button
 												class="text-sm text-secondary hover:text-primary transition-colors"
-												on:click={() => editComment(comment)}
+												onclick={() => editComment(comment)}
 											>
 												수정
 											</button>
 											<button
 												class="text-sm text-secondary hover:text-red-500 transition-colors"
-												on:click={() => confirmDeleteComment(comment)}
+												onclick={() => confirmDeleteComment(comment)}
 											>
 												삭제
 											</button>
 										{:else if comment.author_type === 'anonymous'}
 											<button
 												class="text-sm text-secondary hover:text-primary transition-colors"
-												on:click={() => editComment(comment)}
+												onclick={() => editComment(comment)}
 											>
 												수정
 											</button>
 											<button
 												class="text-sm text-secondary hover:text-red-500 transition-colors"
-												on:click={() => confirmDeleteComment(comment)}
+												onclick={() => confirmDeleteComment(comment)}
 											>
 												삭제
 											</button>
@@ -773,18 +750,18 @@
 
 			{#if deletingComment?.author_type === 'anonymous'}
 				<div class="mb-4">
-					<Input
+					<input
 						bind:value={actionPassword}
 						type="password"
 						placeholder="비밀번호를 입력하세요"
-						error={passwordError}
+						required
 					/>
 				</div>
 			{/if}
 
 			<div class="flex gap-2 justify-end">
-				<Button onclick={closeDeleteModal} variant="secondary" size="sm">취소</Button>
-				<Button onclick={deleteComment} variant="danger" size="sm">삭제</Button>
+				<button type="button" onclick={closeDeleteModal}>취소</button>
+				<button type="button" onclick={deleteComment}>삭제</button>
 			</div>
 		</div>
 	</div>

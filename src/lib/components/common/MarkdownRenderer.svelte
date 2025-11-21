@@ -8,8 +8,6 @@
 	import 'highlight.js/styles/github-dark.css';
 
 	export let content: string;
-	export let showExcerpt: boolean = false;
-	export let excerpt: string = '';
 
 	// 마크다운 시스템 초기화
 	onMount(() => {
@@ -24,18 +22,18 @@
 	}
 </script>
 
-{#if showExcerpt && excerpt}
-	<div class="bg-background border-l-4 border-primary p-6 mb-8 rounded-r-lg">
-		<strong class="text-primary">요약:</strong>
-		<span class="text-primary">{excerpt.replace(/<[^>]*>/g, '')}</span>
-	</div>
-{/if}
-
-<div class="prose prose-lg max-w-none">
+<div class="prose">
 	{@html parseMarkdown(content)}
 </div>
 
 <style>
+	.prose {
+		max-width: 100%;
+		box-sizing: border-box;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+	}
+
 	/* 마크다운 스타일링 - 다크모드 대응 */
 	:global(.prose h1) {
 		font-size: 2.25rem;
@@ -91,6 +89,8 @@
 		line-height: 1.5;
 		background-color: var(--color-bg-tertiary);
 		border: 1px solid var(--color-border-primary);
+		max-width: 100%;
+		box-sizing: border-box;
 	}
 
 	/* highlight.js 스타일과 호환 */
@@ -111,6 +111,7 @@
 	/* 이미지 스타일 */
 	:global(.prose img) {
 		max-width: 100%;
+		width: auto;
 		height: auto;
 		border-radius: 0.5rem;
 		box-shadow: 0 1px 3px var(--color-card-shadow);
@@ -176,11 +177,13 @@
 	/* 표 스타일 */
 	:global(.prose table) {
 		width: 100%;
+		max-width: 100%;
 		border-collapse: collapse;
 		margin: 1.5rem 0;
 		border: 1px solid var(--color-border-primary);
 		border-radius: 0.5rem;
-		overflow: hidden;
+		box-sizing: border-box;
+		table-layout: fixed;
 	}
 
 	:global(.prose th) {
@@ -211,6 +214,10 @@
 
 	/* 반응형 디자인 */
 	@media (max-width: 768px) {
+		.markdown-renderer {
+			padding: 0 1rem 0 0;
+		}
+
 		:global(.prose h1) {
 			font-size: 1.875rem;
 		}

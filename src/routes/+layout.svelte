@@ -1,120 +1,112 @@
 <script lang="ts">
-	import { base } from '$app/paths';
-	import ThemeToggle from '../lib/components/header/ThemeToggle.svelte';
-	import AdminLink from '../lib/components/header/AdminLink.svelte';
+	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
+	import { page } from '$app/stores';
+	import path from 'path';
 
-	let isDrawerOpen = false;
-
-	function toggleDrawer() {
-		isDrawerOpen = !isDrawerOpen;
+	function handleKeydown(event: KeyboardEvent) {
+		const key = event.key.toLowerCase();
+		let backspaceKeys = ['backspace', 'escape', 'esc', 'x', 'delete'];
+		if (backspaceKeys.includes(key)) {
+			event.preventDefault();
+			window.history.back();
+		}
 	}
 
-	function closeDrawer() {
-		isDrawerOpen = false;
-	}
+	onMount(() => {
+		window.addEventListener('keydown', handleKeydown);
+	});
+
+	onDestroy(() => {
+		window.removeEventListener('keydown', handleKeydown);
+	});
 </script>
 
-<div class="flex flex-col min-h-screen">
-	<header
-		class="sticky top-0 z-50 px-4 py-4 md:px-8 bg-background/95 backdrop-blur-md border-b border-primary"
-	>
-		<div class="flex items-center justify-between">
-			<!-- 데스크톱 네비게이션 -->
-			<nav class="hidden md:flex items-center justify-start gap-8">
-				<a
-					href="/"
-					class="text-primary no-underline transition-colors duration-200 tracking-normal hover:text-secondary"
-					>Coding Journal</a
-				>
-				<a
-					href="{base}/blog"
-					class="text-primary no-underline transition-colors duration-200 tracking-normal hover:text-secondary"
-					>Life Journal</a
-				>
-			</nav>
+<svelte:head></svelte:head>
 
-			<!-- 모바일 햄버거 메뉴 버튼 -->
-			<button
-				class="md:hidden p-2 text-primary hover:text-secondary transition-colors duration-200"
-				on:click={toggleDrawer}
-				aria-label="메뉴 열기"
+<div class="layout-container">
+	<header class="header-container">
+		{#if $page.url.pathname !== '/'}
+			<button class="back-button" aria-label="Back" onclick={() => history.back()}
+				><svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="lucide lucide-arrow-left"><path d="M19 12H5" /><path d="M12 19L5 12L12 5" /></svg
+				></button
 			>
-				<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M4 6h16M4 12h16M4 18h16"
-					></path>
-				</svg>
-			</button>
-		</div>
+		{/if}
+		<div class="question-mark">?</div>
 	</header>
-
-	<!-- 모바일 drawer 메뉴 -->
-	{#if isDrawerOpen}
-		<!-- 백드롭 -->
-		<div
-			class="fixed inset-0 bg-black/50 z-40 md:hidden"
-			on:click={closeDrawer}
-			on:keydown={(e) => e.key === 'Escape' && closeDrawer()}
-			aria-label="메뉴 닫기"
-			role="button"
-			tabindex="0"
-		></div>
-
-		<!-- drawer 메뉴 -->
-		<div
-			class="fixed top-0 right-0 h-full max-w-72 w-full bg-background z-50 md:hidden transform transition-transform duration-300 ease-in-out"
-		>
-			<!-- drawer 헤더 -->
-			<div class="flex items-center justify-between p-4">
-				<span class="text-primary font-semibold">메뉴</span>
-				<button
-					class="p-2 text-primary hover:text-secondary transition-colors duration-200"
-					on:click={closeDrawer}
-					aria-label="메뉴 닫기"
-				>
-					<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M6 18L18 6M6 6l12 12"
-						></path>
-					</svg>
-				</button>
-			</div>
-
-			<!-- drawer 메뉴 내용 -->
-			<nav class="p-4 space-y-4">
-				<a
-					href="{base}/dev"
-					class="block text-primary no-underline transition-colors duration-200 tracking-normal hover:text-secondary py-2"
-					on:click={closeDrawer}>개발 로그</a
-				>
-				<a
-					href="{base}/blog"
-					class="block text-primary no-underline transition-colors duration-200 tracking-normal hover:text-secondary py-2"
-					on:click={closeDrawer}>블로그</a
-				>
-				<div class="flex items-center gap-2 justify-end">
-					<AdminLink />
-					<ThemeToggle />
-				</div>
-			</nav>
-		</div>
-	{/if}
-
-	<main class="flex-1">
+	<main class="main-container">
 		<slot />
 	</main>
-
-	<footer class="pt-2 bg-background/95 backdrop-blur-md text-center border-t border-primary">
-		<p class="m-0 text-secondary">&copy; 2025 naroso-o.blog</p>
-	</footer>
 </div>
 
 <style>
 	@import '../app.css';
+
+	.layout-container {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		height: 100vh;
+		box-sizing: border-box;
+
+		padding: 2rem;
+	}
+
+	.header-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+		height: fit-content;
+	}
+
+	.main-container {
+		width: 100%;
+		height: 100%;
+		margin: 0 auto;
+	}
+
+	.back-button {
+		background: none;
+		border: none;
+		color: #fff;
+		cursor: pointer;
+		font-size: 1rem;
+		filter: blur(0.5px);
+	}
+
+	.question-mark {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 20px;
+		height: 20px;
+		margin-left: auto;
+
+		border-radius: 50%;
+		border: 2px solid #fff;
+		color: #fff;
+		line-height: 1;
+		font-size: 0.8rem;
+		font-weight: bold;
+		cursor: pointer;
+		filter: blur(0.5px);
+	}
+
+	@media (max-width: 768px) {
+		.layout-container {
+			padding: 1rem;
+		}
+	}
 </style>
