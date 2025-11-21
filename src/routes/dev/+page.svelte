@@ -81,9 +81,6 @@
 	}
 
 	@media (max-width: 768px) {
-		.post-wrapper {
-		}
-
 		.post-item {
 			max-width: 100%;
 		}
