@@ -2,14 +2,29 @@
 	import { onMount } from 'svelte';
 	import { onDestroy } from 'svelte';
 	import { page } from '$app/stores';
-	import path from 'path';
+	import { goto } from '$app/navigation';
+
+	function getParentPath(currentPath: string): string {
+		const segments = currentPath.split('/').filter(Boolean);
+		if (segments.length === 0) {
+			return '/';
+		}
+		segments.pop();
+		return segments.length === 0 ? '/' : '/' + segments.join('/');
+	}
+
+	function navigateBack() {
+		const currentPath = $page.url.pathname;
+		const parentPath = getParentPath(currentPath);
+		goto(parentPath);
+	}
 
 	function handleKeydown(event: KeyboardEvent) {
 		const key = event.key.toLowerCase();
 		let backspaceKeys = ['backspace', 'escape', 'esc', 'x', 'delete'];
 		if (backspaceKeys.includes(key)) {
 			event.preventDefault();
-			window.history.back();
+			navigateBack();
 		}
 	}
 
@@ -27,7 +42,7 @@
 <div class="layout-container">
 	<header class="header-container">
 		{#if $page.url.pathname !== '/'}
-			<button class="back-button" aria-label="Back" onclick={() => history.back()}
+			<button class="back-button" aria-label="Back" onclick={navigateBack}
 				><svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="24"
