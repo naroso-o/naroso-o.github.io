@@ -51,7 +51,7 @@
 		height: calc(100vh - 7rem);
 		box-sizing: border-box;
 		margin-top: 2rem;
-		padding: 2rem;
+		padding: 4rem 8rem 4rem 8rem;
 
 		background-color: #000;
 		border: 4px solid #1d1618;
@@ -67,7 +67,7 @@
 		font-size: 2rem;
 		font-weight: 700;
 		color: #fff;
-		margin-bottom: 2rem;
+		margin-bottom: 4rem;
 	}
 
 	.info-container {
@@ -100,6 +100,10 @@
 	@media (max-width: 768px) {
 		.content-container {
 			padding: 1rem;
+		}
+
+		.title {
+			margin-bottom: 2rem;
 		}
 
 		.info-container {
