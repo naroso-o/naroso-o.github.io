@@ -6,14 +6,10 @@ export async function load({ url }) {
 	const offset = (page - 1) * limit;
 
 	try {
-		const [posts, allTags] = await Promise.all([
-			postService.getPosts(limit, offset),
-			postService.getAllTags()
-		]);
+		const posts = await postService.getPosts(limit, offset);
 
 		return {
 			posts,
-			allTags,
 			currentPage: page,
 			hasMore: posts.length === limit
 		};
@@ -21,7 +17,6 @@ export async function load({ url }) {
 		console.error('Error loading posts:', err);
 		return {
 			posts: [],
-			allTags: [],
 			currentPage: 1,
 			hasMore: false
 		};
