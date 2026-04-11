@@ -28,8 +28,7 @@ jobs:
       - name: build
         env:
           BASE_PATH: ''
-          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          VITE_PB_URL: ${{ secrets.PB_URL }}
           VITE_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
         run: |
           pnpm run build

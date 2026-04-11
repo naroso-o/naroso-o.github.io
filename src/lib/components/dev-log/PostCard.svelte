@@ -28,7 +28,7 @@
 		</div>
 
 		<footer>
-			<time class="date text-inverse">{formatDate(post.created_at)}</time>
+			<time class="date text-inverse">{formatDate(post.created)}</time>
 			{#if displayTags && displayTags.length > 0}
 				<div class="tags">
 					{#each displayTags as tag}

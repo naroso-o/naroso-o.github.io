@@ -1,7 +1,9 @@
 <script lang="ts">
 	import PageHeader from '../../lib/components/common/PageHeader.svelte';
 	import PostCard from '../../lib/components/dev-log/PostCard.svelte';
+	import type { Post } from '$lib/types';
 	let { data } = $props();
+	const posts = data.posts as unknown as Post[];
 
 	let selectedIndex = $state(0);
 
@@ -41,7 +43,7 @@
 
 <div class="post-container">
 	<div class="post-wrapper">
-		{#each data.posts as post, index}
+		{#each posts as post, index}
 			<div
 				class="post-item"
 				onmouseenter={() => handlePostHover(index)}

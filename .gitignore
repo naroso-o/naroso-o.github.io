@@ -18,6 +18,10 @@ Thumbs.db
 !.env.example
 !.env.test
 
+# Migration (민감 데이터 포함)
+scripts/.env.migrate
+scripts/migration-data/
+
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*

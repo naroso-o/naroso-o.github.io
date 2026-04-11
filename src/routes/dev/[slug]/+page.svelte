@@ -2,10 +2,10 @@
 	import MarkdownRenderer from '$lib/components/common/MarkdownRenderer.svelte';
 	import { generateSEOData, generatePostStatus } from '$lib/utils/meta';
 	import { formatDate } from '$lib/utils/date';
-	import Comments from '../../../lib/components/dev-log/Comments.svelte';
+	import type { Post } from '$lib/types';
 	export let data;
 
-	$: post = data.post;
+	$: post = data.post as unknown as Post;
 	$: seoData = generateSEOData(post);
 	$: postStatus = generatePostStatus(post);
 </script>
@@ -39,10 +39,10 @@
 		{/if}
 
 		<time>
-			{formatDate(post.created_at)}
+			{formatDate(post.created)}
 		</time>
 	</div>
-	<MarkdownRenderer content={post.content} />
+	<MarkdownRenderer content={post.content ?? ''} />
 </div>
 
 <style>
