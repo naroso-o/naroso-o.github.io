@@ -1,34 +1,204 @@
+/* ═══════════════════════════════════════════════════
+   COSMIC ARCHIVE — Global Design System
+   Palette: inspired by deep-space spiral galaxy image
+   ═══════════════════════════════════════════════════ */
+
+/* ── Local Fonts ── */
+@font-face {
+  font-family: 'Orbit';
+  src: url('/fonts/Orbit.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Custom Properties ── */
+:root {
+  /* Core palette */
+  --color-void:        #000000;      /* absolute black */
+  --color-deep-space:  #04000f;      /* deepest navy-black */
+  --color-abyss:       #080018;      /* deep purple-black */
+  --color-nebula-dark: #0e0024;      /* dark purple */
+  --color-navy-deep:   #060022;      /* deep indigo */
+  --color-indigo:      #1a0040;      /* rich indigo */
+
+  /* Accent */
+  --color-purple:      #7c3aed;      /* vivid purple */
+  --color-purple-mid:  #a78bfa;      /* soft lavender */
+  --color-purple-pale: #ddd6fe;      /* pale lavender */
+  --color-green:       #4ade80;      /* signal green */
+  --color-green-pale:  #86efac;      /* soft green */
+  --color-white:       #ffffff;
+  --color-star:        #f0ecff;      /* warm white */
+  --color-dust:        #c8b8ff;      /* star dust */
+
+  /* Gradients */
+  --grad-nebula: linear-gradient(135deg, #7c3aed 0%, #4ade80 100%);
+  --grad-aurora: linear-gradient(180deg, #a78bfa 0%, #4ade80 100%);
+  --grad-deep:   linear-gradient(180deg, #04000f 0%, #080018 50%, #0e0024 100%);
+
+  /* Typography */
+  --font-primary: 'Orbit', sans-serif;
+  --font-mono:    'Courier New', monospace;
+
+  /* Motion */
+  --ease-cosmic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft:   cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 html {
-	font-family: 'Orbit', sans-serif;
-	margin: 0;
-	padding: 0;
-	height: 100vh;
-	overflow: hidden;
+  font-family: var(--font-primary);
+  height: 100%;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
 
 body {
-	margin: 0;
-	padding: 0;
-	height: 100vh;
-	overflow: hidden;
-	background-image: url('/pattern.png');
-	background-size: cover;
-	background-position: center;
-	background-attachment: fixed;
-	background-blend-mode: multiply;
-	color: #fff;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: var(--color-deep-space);
+  color: var(--color-star);
+  cursor: none; /* custom cursor active */
 }
 
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-abyss);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-purple);
+  border-radius: 2px;
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-purple) var(--color-abyss);
+}
+
+/* ── Typography scale ── */
 h1 {
-	font-size: 2.5rem;
-	line-height: 2;
-	text-align: center;
-	margin: 0;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: 0.06em;
+  text-align: center;
 }
 
 h2 {
-	font-size: 2rem;
-	line-height: 2;
-	text-align: center;
-	margin: 0;
+  font-size: clamp(1.6rem, 4vw, 3rem);
+  font-weight: 300;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+h3 {
+  font-size: clamp(1.1rem, 2.5vw, 1.8rem);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+
+p {
+  line-height: 1.75;
+  color: var(--color-dust);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: none;
+  background: none;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+}
+
+/* ── Utility classes ── */
+.text-gradient {
+  background: var(--grad-nebula);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.blur-text {
+  filter: blur(0.4px);
+}
+
+.glow-purple {
+  text-shadow:
+    0 0 8px rgba(124, 58, 237, 0.8),
+    0 0 24px rgba(124, 58, 237, 0.4);
+}
+
+.glow-green {
+  text-shadow:
+    0 0 8px rgba(74, 222, 128, 0.8),
+    0 0 24px rgba(74, 222, 128, 0.3);
+}
+
+/* ── Fade-in animation (for blog/dev pages) ── */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.7s var(--ease-cosmic) both;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s var(--ease-soft) both;
+}
+
+/* ── Star field noise texture ── */
+.noise-bg {
+  position: relative;
+}
+.noise-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 15% 25%, rgba(200,184,255,0.35) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 10%, rgba(255,255,255,0.2)  0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 70%, rgba(167,139,250,0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 55%, rgba(74,222,128,0.2)   0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 40%, rgba(255,255,255,0.15) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
 }
